@@ -2,6 +2,17 @@ from pyspark.sql import SparkSession
 import os
 
 """
+These is how you import the types that make up schema
+This is how Ian defines tables.
+
+Check and see if this sort of thing exists for Pandas as well.
+
+There are types for each of the common datatypes
+
+"""
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType,
+
+"""
 Every spark job will start with a Spark session
 """
 
