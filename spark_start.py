@@ -10,7 +10,7 @@ Check and see if this sort of thing exists for Pandas as well.
 There are types for each of the common datatypes
 
 """
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType,
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 """
 Every spark job will start with a Spark session
@@ -84,7 +84,7 @@ Hadoop home is somehow the key here.
 # tbl_final.write.format("csv").save('files/data/employee_data_wt.csv')
 
 tbl_final.printSchema()
-tbl_final.schema()
+# tbl_final.schema()
 
 """
 Schema's in spark are StructTypes. This is what Ian uses to define his tables. 
@@ -94,3 +94,44 @@ types to act as an ORM of sorts to allow for portability of your workflows.
 Python allows us to be agnostic but so would C or C++ or any language for that matter.
 
 """
+
+# Columns and
+
+"""
+Why do columns matter?
+    You'll need to use columns when you query a dataframe. Very similar to what you would do in SQL.
+    col, expression, and table.column all do the same thing.
+    Expressions allow us to manipulate the columns within a dataframe
+        Think casting which is done on a column
+        I think you may be able to do mathematical operations using expr as well.
+    
+    Is a dataframe somehow different from the spark session?
+"""
+from pyspark.sql.functions import col, expr
+
+print(tbl.salary, type(tbl.salary))
+print(tbl['salary'], type(tbl['salary']))
+print(expr("salary"), type(expr("salary")))
+print(col("salary"), type(col("salary")))
+
+# tbl_filtered = tbl.select((col("employee_id"), expr("name"), tbl.age, tbl.salary))
+
+"""This is a select statement"""
+tbl_filtered = tbl.select(col("employee_id"), expr("name"), tbl.age, tbl.salary)
+tbl_filtered.show()
+
+
+
+
+"""
+Select Expression allows you to select and not have to explicitly wrap each expression in an expression method call.
+just seems to let us be less verbose.
+
+"""
+tbl_slct_cast = tbl_filtered.selectExpr("employee_id as emp_id", "salary", "name", "cast(age as int) as age"
+                                        , "salary")
+tbl_slct_cast.printSchema()
+tbl_slct_cast.show()
+
+tbl_cast_final = tbl_slct_cast.where(tbl_slct_cast.age > 30)
+tbl_cast_final.show()
