@@ -120,8 +120,10 @@ print(col("salary"), type(col("salary")))
 tbl_filtered = tbl.select(col("employee_id"), expr("name"), tbl.age, tbl.salary)
 tbl_filtered.show()
 
-
-
+"""
+This is how we write a basic select statment in spark
+"""
+tbl_casted = tbl_filtered.select(expr("employee_id as emp_id"), tbl.name, expr("cast(age as int) as age"), tbl.salary)
 
 """
 Select Expression allows you to select and not have to explicitly wrap each expression in an expression method call.
